@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memorama Responsivo</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+            width: 90vw;
+            max-width: 400px;
+        }
+        .card {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="grid" id="gameBoard">
+        <!-- Las cartas se generarán con JavaScript -->
+    </div>
+    <script>
+        const symbols = ['🍎', '🍌', '🍒', '🍇', '🍉', '🥝', '🍍', '🥥'];
+        let cards = [...symbols, ...symbols].sort(() => Math.random() - 0.5);
+        const gameBoard = document.getElementById('gameBoard');
+
+        cards.forEach(symbol => {
+            let card = document.createElement('div');
+            card.classList.add('card');
+            card.dataset.symbol = symbol;
+            card.addEventListener('click', flipCard);
+            gameBoard.appendChild(card);
+        });
+
+        let firstCard, secondCard;
+        function flipCard() {
+            if (this.textContent || secondCard) return;
+            this.textContent = this.dataset.symbol;
+            if (!firstCard) {
+                firstCard = this;
+            } else {
+                secondCard = this;
+                setTimeout(checkMatch, 500);
+            }
+        }
+        function checkMatch() {
+            if (firstCard.dataset.symbol !== secondCard.dataset.symbol) {
+                firstCard.textContent = '';
+                secondCard.textContent = '';
+            }
+            firstCard = secondCard = null;
+        }
+    </script>
+</body>
+</html>
